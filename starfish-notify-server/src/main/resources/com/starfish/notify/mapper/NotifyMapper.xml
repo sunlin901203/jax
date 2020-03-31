@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.starfish.notify.mapper.NotifyMapper">
+  <resultMap id="BaseResultMap" type="com.starfish.notify.model.NotifyModel">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_id" jdbcType="INTEGER" property="appId" />
+    <result column="source_notify_id" jdbcType="VARCHAR" property="sourceNotifyId" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="body" jdbcType="VARCHAR" property="body" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="time" jdbcType="INTEGER" property="time" />
+    <result column="max_time" jdbcType="INTEGER" property="maxTime" />
+    <result column="notify_time" jdbcType="TIMESTAMP" property="notifyTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, app_id, source_notify_id, url, method, body, status, time, max_time, notify_time,
+    create_time, modify_time
+  </sql>
+
+  <sql id="sql_where">
+    where 1 = 1
+    <if test="id != null">
+      and id = #{id,jdbcType=BIGINT}
+    </if>
+    <if test="appId != null">
+      and app_id = #{appId,jdbcType=INTEGER}
+    </if>
+    <if test="sourceNotifyId != null">
+      and source_notify_id=#{sourceNotifyId,jdbcType=VARCHAR}
+    </if>
+    <if test="url != null">
+      and url=#{url,jdbcType=VARCHAR}
+    </if>
+    <if test="method != null">
+      and method=#{method,jdbcType=VARCHAR}
+    </if>
+    <if test="body != null">
+      and body=#{body,jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+      and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="time != null">
+      and time=#{time,jdbcType=INTEGER}
+    </if>
+    <if test="maxTime != null">
+      and max_time=#{maxTime,jdbcType=INTEGER}
+    </if>
+    <if test="notifyTime != null">
+      and notify_time=#{notifyTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createTime != null">
+      and create_time=#{createTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="modifyTime != null">
+      and modify_time=#{modifyTime,jdbcType=TIMESTAMP}
+    </if>
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_notify
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+
+  <select id="list" parameterType="com.starfish.notify.model.NotifyModel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_notify
+    <include refid="sql_where"/>
+    order by id desc
+    limit 1000
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_notify
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.starfish.notify.model.NotifyModel" useGeneratedKeys="true" keyProperty="id">
+    insert into t_notify (id, app_id, source_notify_id,
+      url, method, body,
+      status, time, max_time,
+      notify_time, create_time, modify_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{appId,jdbcType=INTEGER}, #{sourceNotifyId,jdbcType=VARCHAR},
+      #{url,jdbcType=VARCHAR}, #{method,jdbcType=VARCHAR}, #{body,jdbcType=VARCHAR},
+      #{status,jdbcType=INTEGER}, #{time,jdbcType=INTEGER}, #{maxTime,jdbcType=INTEGER},
+      #{notifyTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.starfish.notify.model.NotifyModel" useGeneratedKeys="true" keyProperty="id">
+    insert into t_notify
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appId != null">
+        app_id,
+      </if>
+      <if test="sourceNotifyId != null">
+        source_notify_id,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="method != null">
+        method,
+      </if>
+      <if test="body != null">
+        body,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="time != null">
+        time,
+      </if>
+      <if test="maxTime != null">
+        max_time,
+      </if>
+      <if test="notifyTime != null">
+        notify_time,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appId != null">
+        #{appId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceNotifyId != null">
+        #{sourceNotifyId,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        #{time,jdbcType=INTEGER},
+      </if>
+      <if test="maxTime != null">
+        #{maxTime,jdbcType=INTEGER},
+      </if>
+      <if test="notifyTime != null">
+        #{notifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.starfish.notify.model.NotifyModel">
+    update t_notify
+    <set>
+      <if test="appId != null">
+        app_id = #{appId,jdbcType=INTEGER},
+      </if>
+      <if test="sourceNotifyId != null">
+        source_notify_id = #{sourceNotifyId,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        method = #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="body != null">
+        body = #{body,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=INTEGER},
+      </if>
+      <if test="maxTime != null">
+        max_time = #{maxTime,jdbcType=INTEGER},
+      </if>
+      <if test="notifyTime != null">
+        notify_time = #{notifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.starfish.notify.model.NotifyModel">
+    update t_notify
+    set app_id = #{appId,jdbcType=INTEGER},
+      source_notify_id = #{sourceNotifyId,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      method = #{method,jdbcType=VARCHAR},
+      body = #{body,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      time = #{time,jdbcType=INTEGER},
+      max_time = #{maxTime,jdbcType=INTEGER},
+      notify_time = #{notifyTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

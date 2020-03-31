@@ -1,0 +1,112 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  namespace: NAMESPACE
+  name: starfish-notify-TARGET-deploy
+spec:
+  selector:
+    matchLabels:
+      app: starfish-notify-TARGET
+  replicas: REPLICA
+  minReadySeconds: 60
+  strategy:
+    rollingUpdate:  #由于replicas为n,则整个升级,pod个数在(n-1)-(n+1)个之间
+      maxSurge: 2      #滚动升级时会先启动1个pod
+      maxUnavailable: 0 #滚动升级时允许的最大Unavailable的pod个数
+  template:
+    metadata:
+      labels:
+        app: starfish-notify-TARGET
+    spec:
+#      dnsPolicy: ClusterFirstWithHostNet
+      terminationGracePeriodSeconds: 30
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - starfish-notify-TARGET
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: starfish-notify-TARGET
+        image: hub.docker.com/sunlin901203/starfish-notify:TAG-TIMESTAMP
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /api/alive
+            port: 9803
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /api/alive
+            port: 9803
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+        volumeMounts:
+        - mountPath: /data/logs
+          name: log-path
+        resources:
+          limits:
+            memory: "4G"
+            cpu: "2"
+          requests:
+            memory: "4G"
+            cpu: "2"
+#        lifecycle:
+#          preStop:
+#            exec:
+#              command: ['curl','-XPOST','http://localhost:PODPORT/shutdown?username=starfish&password=soft123456']
+      volumes:
+      - name: log-path
+        hostPath:
+          path: /data/logs/
+          type: Directory
+      nodeSelector: {
+        CONFIG
+      }
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  namespace: NAMESPACE
+  name: starfish-notify-TARGET-service
+spec:
+  selector:
+    app: starfish-notify-TARGET
+  ports:
+  - port: 9803
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  namespace: NAMESPACE
+  name: notify.TARGET.starfish.com
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+
+spec:
+  rules:
+    # 域名，notify.dev.starfish.com，notify.test.starfish.com
+    - host: notify.TARGET.starfish.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: starfish-notify-TARGET-service
+              servicePort: 9803

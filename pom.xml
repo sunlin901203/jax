@@ -10,15 +10,15 @@
     </parent>
 
     <groupId>com.github.sunlin901203</groupId>
-    <artifactId>sunny-notify</artifactId>
+    <artifactId>starfish-notify</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
-    <name>sunny-notify</name>
-    <description>sunny-notify</description>
+    <name>starfish-notify</name>
+    <description>starfish-notify</description>
 
     <modules>
-        <module>sunny-notify-api</module>
-        <module>sunny-notify-server</module>
+        <module>starfish-notify-api</module>
+        <module>starfish-notify-server</module>
     </modules>
 
     <properties>
@@ -65,7 +65,7 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
-                <version>1.1.41</version>
+                <version>1.2.68</version>
             </dependency>
 
             <dependency>
